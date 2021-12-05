@@ -45,6 +45,7 @@ def main():
             for board in boards:
                 if check_win(board, called):
                     print(sum(all_unmarked_numbers(board, called)) * int(call))
+                    break
 
 if __name__ == '__main__':
     main()
