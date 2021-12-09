@@ -52,5 +52,7 @@ def main():
                 out.append(str(known[''.join(sorted(o))]))
             total += int(''.join(out))
     print(total)
+
+
 if __name__ == '__main__':
     main()
