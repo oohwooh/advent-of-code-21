@@ -2,6 +2,7 @@ from time import perf_counter
 import matplotlib.pyplot as plt
 import matplotx
 
+
 def race(lola, lynne, lines):
     fig, ax = plt.subplots()
     loop_count = 1000

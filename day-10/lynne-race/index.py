@@ -4,7 +4,6 @@ from time import perf_counter
 import matplotlib.pyplot as plt
 import matplotx
 
-
 with open('race-input.txt') as f:
     lines = f.readlines()
 
