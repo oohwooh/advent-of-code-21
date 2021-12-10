@@ -38,6 +38,8 @@ async def lola():
                 up = map[x].get(y - 1, None)
                 if up is not None and int(up) < 9:
                     basin.add((x, y - 1))
+            if basin_copy == basin:
+                return basin
         return basin
 
     tasks = []
@@ -47,11 +49,12 @@ async def lola():
     basins = [task.result() for task in tasks]
     largest_basins = sorted([len(basin) for basin in basins], reverse=True)
     # print(largest_basins[0] * largest_basins[1] * largest_basins[2])
+
     # print(largest_basins)
 
 from time import perf_counter
 
-def lynne():
+async def lynne():
     def increasing_neighbors(grid, rows, columns, x, y, existing):
         neighbors = []
         if x > 0 and (x - 1, y) not in existing and grid[x - 1, y] != 9:
@@ -83,7 +86,8 @@ def lynne():
         # print("Part 1:", sum(grid[point] + 1 for point in low_points))
 
         basins = {point: {point} for point in low_points}
-        for (x, y) in basins:
+        async def check_basin(basin, basins):
+            x, y = basin
             neighbors = increasing_neighbors(grid, rows, columns, x, y, basins[x, y])
             while len(neighbors) > 0:
                 new_neighbors = []
@@ -91,22 +95,50 @@ def lynne():
                  neighbors]
                 neighbors = new_neighbors
                 [basins[x, y].add(n) for n in neighbors]
+        for basin in basins:
+            await check_basin(basin, basins)
+
         ttb = sorted([len(basins[point]) for point in basins], reverse=True)
         # print("Part 2:", ttb[0] * ttb[1] * ttb[2])
 
+
+import matplotlib.pyplot as plt
+import matplotx
+
 if __name__ == '__main__':
-    lynne_start = perf_counter()
-    for _ in range(1000):
-        lynne()
-    lynne_time = perf_counter() - lynne_start
-    print(f'Lynne: {lynne_time} ({lynne_time/1000}/it)')
-    lola_start = perf_counter()
-    for _ in range(1000):
+    fig, ax = plt.subplots()
+    loop_count = 500
+    lynne_times = [0]
+    lola_times = [0]
+    loops = range(loop_count)
+    for _ in loops:
+        lynne_start = perf_counter()
+        asyncio.run(lynne())
+        lynne_time = perf_counter() - lynne_start
+        lynne_times.append(lynne_time + lynne_times[-1])
+
+    # print(f'Lynne: {lynne_time} ({lynne_time/loops}/it)')
+    for _ in loops:
+        lola_start = perf_counter()
         asyncio.run(lola())
-    lola_time = perf_counter() - lola_start
-    print(f'Lola: {lola_time} ({lola_time/1000}/it)')
-    if lola_time > lynne_time:
-        print('Winner: Lynne')
-    else:
-        print('Winner: Lola')
-    print(f'Diff: {abs(lola_time - lynne_time)} ({abs(lola_time - lynne_time)/1000}/it)')
+        lola_time = perf_counter() - lola_start
+        lola_times.append(lola_time + lola_times[-1])
+    lola_times.pop(0)
+    lynne_times.pop(0)
+
+    diffs = [abs(lola_times[i] - lynne_times[i]) for i in loops]
+
+    ax.plot(loops, lola_times, label='Lola')
+    ax.plot(loops, lynne_times, label='Lynne')
+    ax.plot(loops, diffs, label='Diff')
+    ax.set_xlabel('Iterations')
+    ax.set_ylabel('Cumulative execution time')
+    matplotx.line_labels()
+    plt.show()
+    # print(f'Lola: {lola_time} ({lola_time/loops}/it)')
+
+    # if lola_time > lynne_time:
+    #     print('Winner: Lynne')
+    # else:
+    #     print('Winner: Lola')
+    # print(f'Diff: {abs(lola_time - lynne_time)} ({abs(lola_time - lynne_time)/loops}/it)')
