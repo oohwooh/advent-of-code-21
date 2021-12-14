@@ -1,0 +1,11 @@
+BHACHHC
+
+AA -> H
+AC -> H
+AH -> H
+CA -> H
+CC -> H
+CH -> H
+HA -> H
+HC -> H
+HH -> H

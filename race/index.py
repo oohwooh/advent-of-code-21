@@ -3,22 +3,21 @@ import matplotlib.pyplot as plt
 import matplotx
 
 
-def race(lola, lynne, lines):
+def race(lola, lynne, lines, loop_count=1000):
     fig, ax = plt.subplots()
-    loop_count = 1000
     lynne_times = [0]
     lola_times = [0]
     loops = range(loop_count)
     for _ in loops:
         lynne_start = perf_counter()
-        lynne(lines)
+        lynne(lines, _)
         lynne_time = perf_counter() - lynne_start
         lynne_times.append(lynne_time + lynne_times[-1])
 
     # print(f'Lynne: {lynne_time} ({lynne_time/loops}/it)')
     for _ in loops:
         lola_start = perf_counter()
-        lola(lines)
+        lola(lines, _)
         lola_time = perf_counter() - lola_start
         lola_times.append(lola_time + lola_times[-1])
     lola_times.pop(0)

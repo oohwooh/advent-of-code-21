@@ -20,13 +20,13 @@ input_grids = {}
 
 lola_times = []
 lynne_times = []
-loop = range(5, 15)
+loop = range(5, 20)
 print('Brute forcing valid grids...')
 for i in loop:
     print('')
     lola_time = 0
     lynne_time = 0
-    for j in range(100):
+    for j in range(500):
         grid = random_grid(i)
         s = perf_counter()
         lola_answer = lola(grid)
@@ -69,7 +69,7 @@ for size in input_grids:
     print('')
     lola_time = 0
     lynne_time = 0
-    for j in range(100):
+    for j in range(1000):
         grid = choice(input_grids[size])
         s = perf_counter()
         lola_answer = lola(grid)
